@@ -15,7 +15,6 @@ def generateMonthCSVFile(days, csvName, url, cookie, securityHeaders):
 
 
     req = url + "/Search/ExportEntries?searchrequest=%7B%22DataPagingCriteria%22:%7B%22ResultItemsStartIndex%22:0,%22ResultItemsCount%22:15%7D,%22EvaluatedPersonEntrySearchCriteria%22:%7B%22EntryDateTimeMax%22:%22" + dateFormatCurrent + "%2023:59:59%22,%22EntryDateTimeMin%22:%22" + dateFormatNew + "%22,%22HighLevelResult%22:null,%22PersonEntryMetaDatas%22:[],%22ScanReason%22:null,%22AdditionalDataFilters%22:null,%22DecisionOrigin%22:null,%22KeywordSearchCriteria%22:%7B%22KeywordValue%22:null,%22KeywordValueForReference%22:null%7D,%22AdditionalDataNames%22:[%22BranchCode%22,%22UserName%22,%22CustomerNumber%22,%22IsMarkedForSecondLineReview%22,%22IsCommited%22,%22IsExported%22,%22ManualFaceMatchResult%22,%22AutomatedFaceMatchResult%22,%22LivenessFinalResult%22,%22LivenessFramesNumber%22,%22LivenessActionsNumber%22,%22LivenessActionTimeout%22,%22LivenessNumberOfSelfie%22,%22LivenessJumpsAllowed%22,%22LivenessPassedFrames%22,%22Site%22,%22Location%22]%7D,%22UserId%22:null%7D"
-    print(req)
 
     payload = {}
     headers = {
@@ -24,8 +23,6 @@ def generateMonthCSVFile(days, csvName, url, cookie, securityHeaders):
     }
     response = requests.request("GET", req, headers=headers, data=payload)
     if response.status_code != 200:
-        print(response.status_code)
-        print(response.text)
         with open(csvName, 'w') as out:
             out.write("")
     else:
@@ -34,9 +31,6 @@ def generateMonthCSVFile(days, csvName, url, cookie, securityHeaders):
 
 def getCookie(url, username, password):
     url = url + "/token"
-
-    print("Username:", username)
-    print("Password: ", password)
     payload = "username=" + username + "&password=" + password + "&grant_type=password&area=scanning"
 
     headers = {
@@ -128,8 +122,6 @@ def process_chunk(data_chunk):
                         customerNumber = item.get("Value")
                     if item.get("Name") == "Location":
                         location = item.get("Value")
-                print(customerNumber)
-                print(location)
                 row[-1] = location
                 row.append(customerNumber)
         except Exception as e:
@@ -145,7 +137,7 @@ def chunk_data(data, num_chunks):
 days = 1
 csvName = "ALC_CSV_OUTPUT_WITH_CUSTOMER_NUMBER.csv"
 url = "https://prod.idscan.cloud/idscanenterprisesvc"
-user = ""
+user = "ALC_Sup2"
 passw = ""
 
 content = getCookie(url, user, passw)
